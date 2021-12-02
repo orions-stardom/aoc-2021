@@ -1,8 +1,8 @@
 import more_itertools as mit
 
 def part_1(data):
-    """
-    part_1('''\
+    r"""
+    >>> part_1('''\
     ... 199
     ... 200
     ... 208
@@ -20,7 +20,8 @@ def part_1(data):
     return sum(b > a for a,b in mit.pairwise(data))
 
 def part_2(data):
-    """part_2('''\
+    r"""
+    >>> part_2('''\
     ... 199
     ... 200
     ... 208
