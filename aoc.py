@@ -10,11 +10,11 @@ import aocd
 from parse import parse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--skip-test", action="store_true", help="Skip automated doc test when running. When omitted, the entire module for the selected day is tested even if only one part would actually be run")
-parser.add_argument("--submit", action="store_false")
+parser.add_argument("--no-test", action="store_false", dest="test", help="Skip automated doc test when running. When omitted, the entire module for the selected day is tested even if only one part would actually be run")
+parser.add_argument("--no-submit", action="store_false", dest="submit")
 parser.add_argument("--day", type=int, choices=range(1,26), help="Omit for today but only during the advent season")
 parser.add_argument("--year", type=int, help="Puzzle year. If omitted, detect based on the containing folder name")
-parser.add_argument("--part", type=int, choices=[1,2], action="append", help="Which puzzle(s) to run. If omitted, run all that exist in the script for the selected day")
+parser.add_argument("--part", type=int, choices=[1,2], action="append", help="Which puzzle(s) to run. If omitted, run all that exist in the script for the selected day. Can be used multiple times to explicitly include multiple parts")
 
 args = parser.parse_args()
 
@@ -31,7 +31,7 @@ if args.day is None:
 
 solution_module = importlib.import_module(f'day_{args.day:02}')
 
-if not args.skip_test:
+if args.test:
     failure, tests = doctest.testmod(solution_module)
     if failure > 0:
         sys.exit(f"Failed {failure}/{tests} tests")
