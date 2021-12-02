@@ -7,8 +7,6 @@ import sys
 
 import aocd
 
-import dotenv; dotenv.load_dotenv()
-
 year = 2021
 
 parser = argparse.ArgumentParser()

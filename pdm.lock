@@ -51,6 +51,11 @@ requires_python = ">=3.5"
 summary = "More routines for operating on iterables, beyond itertools"
 
 [[package]]
+name = "parse"
+version = "1.19.0"
+summary = "parse() is the opposite of format()"
+
+[[package]]
 name = "pebble"
 version = "4.6.3"
 summary = "Threading and multiprocessing eye-candy."
@@ -63,12 +68,6 @@ summary = "Extensions to the standard Python datetime module"
 dependencies = [
     "six>=1.5",
 ]
-
-[[package]]
-name = "python-dotenv"
-version = "0.19.2"
-requires_python = ">=3.5"
-summary = "Read key-value pairs from a .env file and set them as environment variables"
 
 [[package]]
 name = "pytz-deprecation-shim"
@@ -132,7 +131,7 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:b8c55e529ed543e853375a1e00bee05d81408bb422a4cd9949d88a2ab3227e19"
+content_hash = "sha256:e94360305b0f3f941638837012585ea37632357facb4846ac3fa7d5eca60b951"
 
 [metadata.files]
 "advent-of-code-data 1.1.1" = [
@@ -162,6 +161,9 @@ content_hash = "sha256:b8c55e529ed543e853375a1e00bee05d81408bb422a4cd9949d88a2ab
     {file = "more_itertools-8.12.0-py3-none-any.whl", hash = "sha256:43e6dd9942dffd72661a2c4ef383ad7da1e6a3e968a927ad7a6083ab410a688b"},
     {file = "more-itertools-8.12.0.tar.gz", hash = "sha256:7dc6ad46f05f545f900dd59e8dfb4e84a4827b97b3cfecb175ea0c7d247f6064"},
 ]
+"parse 1.19.0" = [
+    {file = "parse-1.19.0.tar.gz", hash = "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"},
+]
 "pebble 4.6.3" = [
     {file = "Pebble-4.6.3-py2.py3-none-any.whl", hash = "sha256:46e02767b239a29b8150466514fabb5c6632bea8c9b7456dfdb715f4636fc8a3"},
     {file = "Pebble-4.6.3.tar.gz", hash = "sha256:694e1105db888f3576b8f00662f90b057cf3780e6f8b7f57955a568008d0f497"},
@@ -169,10 +171,6 @@ content_hash = "sha256:b8c55e529ed543e853375a1e00bee05d81408bb422a4cd9949d88a2ab
 "python-dateutil 2.8.2" = [
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
-]
-"python-dotenv 0.19.2" = [
-    {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
-    {file = "python-dotenv-0.19.2.tar.gz", hash = "sha256:a5de49a31e953b45ff2d2fd434bbc2670e8db5273606c1e737cc6b93eff3655f"},
 ]
 "pytz-deprecation-shim 0.1.0.post0" = [
     {file = "pytz_deprecation_shim-0.1.0.post0-py2.py3-none-any.whl", hash = "sha256:8314c9692a636c8eb3bda879b9f119e350e93223ae83e70e80c31675a0fdc1a6"},
