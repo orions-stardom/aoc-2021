@@ -32,7 +32,9 @@ if args.part is None:
     args.part = 2 if hasattr(solution_module, 'part_2') else 1
 
 if not args.skip_test:
-    doctest.testmod(solution_module)
+    failure, tests = doctest.testmod(solution_module)
+    if failure > 0:
+        sys.exit(f"Failed {failure}/{tests} tests")
 
 data = aocd.get_data(year=year, day=args.day)
 solution = getattr(solution_module, f'part_{args.part}')(data)
