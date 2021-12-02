@@ -1,5 +1,4 @@
-
-
+from parse import parse
 
 def part_1(data):
     r"""
@@ -16,8 +15,7 @@ def part_1(data):
     horiz, depth = (0, 0)
 
     for line in data.splitlines():
-        direction, amount = line.strip().split()
-        amount = int(amount)
+        direction, amount = parse("{} {:n}", line)
 
         if direction == "forward":
             horiz += amount
@@ -43,8 +41,7 @@ def part_2(data):
     horiz, depth, aim = (0, 0, 0)
 
     for line in data.splitlines():
-        direction, amount = line.strip().split()
-        amount = int(amount)
+        direction, amount = parse("{} {:n}", line)
 
         if direction == "forward":
             horiz += amount
