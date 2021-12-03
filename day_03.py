@@ -20,18 +20,14 @@ def part_1(data):
     """
 
     data = data.splitlines()
-    gamma = 0
-    epsilon = 0
-
-    for position, bits in enumerate(zip(*(num[::-1] for num in data))):
-        count = Counter(bits)
-       
-        if count["1"] > count["0"]:
-            gamma += 2**position 
-        else:
-            epsilon += 2**position
     
-    return gamma*epsilon
+    scale = len(data[0])
+    cutoff = len(data) / 2
+    nums = [int(line, 2) for line in data]
+    
+    gamma = sum(2**i for i in range(scale) if sum((num >> i) & 1 for num in nums) >= cutoff)
+    epsilon = 2**(scale)-1 - gamma
+    return gamma * epsilon
 
 def part_2(data):
     r"""
