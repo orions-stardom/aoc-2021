@@ -44,6 +44,8 @@ for part in (args.part or [1,2]):
         # If parts were specified, they must exist, but if we're running all of them 
         if args.part:
             sys.exit(f"Day {args.day} has no solution for part {part}")
+        else:
+            continue
 
     print(f"Solution to part {part}: ", solution, sep="\n")
 
