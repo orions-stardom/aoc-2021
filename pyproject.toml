@@ -9,9 +9,12 @@ requires-python = ">=3.9"
 dependencies = [
     "advent-of-code-data",
     "more-itertools",
-    "parse"
+    "parse",
+    "numpy~=1.21",
 ]
 name = "advent of python"
 description = "My solutions to Advent of Code 2021, in python"
 license="MIT"#{file= "COPYING"}
 
+[tool]
+[tool.pdm]
