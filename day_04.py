@@ -9,7 +9,7 @@ class Board:
 
     @property
     def has_won(self):
-        return np.any(self.board.mask) and (np.any(np.all(self.board.mask, axis=0)) or np.any(np.all(self.board.mask, axis=1)))
+        return np.any(np.all(self.board.mask, axis=0)) or np.any(np.all(self.board.mask, axis=1))
     
     @property
     def sum(self):
