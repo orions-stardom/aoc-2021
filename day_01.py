@@ -1,8 +1,11 @@
 import more_itertools as mit
 
-def part_1(data):
+def _parse(rawdata):
+    return [int(x) for x in rawdata.splitlines()]
+
+def part_1(*nums):
     r"""
-    >>> part_1('''\
+    >>> part_1(*_parse('''\
     ... 199
     ... 200
     ... 208
@@ -12,16 +15,15 @@ def part_1(data):
     ... 240
     ... 269
     ... 260
-    ... 263''')
+    ... 263'''))
     7
 
     """
-    data = [int(x) for x in data.splitlines()]
-    return sum(b > a for a,b in mit.pairwise(data))
+    return sum(b > a for a,b in mit.pairwise(nums))
 
-def part_2(data):
+def part_2(*nums):
     r"""
-    >>> part_2('''\
+    >>> part_2(*_parse('''\
     ... 199
     ... 200
     ... 208
@@ -31,8 +33,7 @@ def part_2(data):
     ... 240
     ... 269
     ... 260
-    ... 263''')
+    ... 263'''))
     5
     """
-    data = [int(x) for x in data.splitlines()]
-    return sum(b > a for a,b in mit.pairwise(sum(w) for w in mit.windowed(data, 3)))
+    return sum(b > a for a,b in mit.pairwise(sum(w) for w in mit.windowed(nums, 3)))

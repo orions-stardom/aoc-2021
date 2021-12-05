@@ -1,9 +1,12 @@
 from collections import Counter
 import itertools as it
 
-def part_1(data):
+def _parse(rawdata):
+    return rawdata.splitlines()
+
+def part_1(*lines):
     r"""
-    >>> part_1('''\
+    >>> part_1(*_parse('''\
     ... 00100
     ... 11110
     ... 10110
@@ -15,23 +18,21 @@ def part_1(data):
     ... 10000
     ... 11001
     ... 00010
-    ... 01010''')
+    ... 01010'''))
     198
     """
-
-    data = data.splitlines()
     
-    scale = len(data[0])
-    cutoff = len(data) / 2
-    nums = [int(line, 2) for line in data]
+    scale = len(lines[0])
+    cutoff = len(lines) / 2
+    nums = [int(line, 2) for line in lines]
     
     gamma = sum(2**i for i in range(scale) if sum((num >> i) & 1 for num in nums) >= cutoff)
     epsilon = 2**(scale)-1 - gamma
     return gamma * epsilon
 
-def part_2(data):
+def part_2(*lines):
     r"""
-    >>> part_2('''\
+    >>> part_2(*_parse('''\
     ... 00100
     ... 11110
     ... 10110
@@ -43,11 +44,11 @@ def part_2(data):
     ... 10000
     ... 11001
     ... 00010
-    ... 01010''')
+    ... 01010'''))
     230
     """
     # naive approach - just exactly as written
-    oxy_candidates = data.splitlines()
+    oxy_candidates = lines
 
     for pos in it.count():
         count = Counter(candidate[pos] for candidate in oxy_candidates)
@@ -59,8 +60,8 @@ def part_2(data):
             break
 
 
-    co2_candidates = data.splitlines()
-    
+    co2_candidates = lines
+
     for pos in it.count():
         count = Counter(candidate[pos] for candidate in co2_candidates)
         least_common = "0" if count["1"] >= count["0"] else "1"

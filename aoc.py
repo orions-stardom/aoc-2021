@@ -36,10 +36,12 @@ if args.test:
     if failure > 0:
         sys.exit(f"Failed {failure}/{tests} tests")
 
-data = aocd.get_data(year=args.year, day=args.day)
+rawdata = aocd.get_data(year=args.year, day=args.day)
+parseddata = getattr(solution_module, "_parse")(rawdata)
+
 for part in (args.part or [1,2]):
     try:
-        solution = getattr(solution_module, f'part_{part}')(data)
+        solution = getattr(solution_module, f'part_{part}')(*parseddata)
     except AttributeError:
         # If parts were specified, they must exist, but if we're running all of them 
         if args.part:

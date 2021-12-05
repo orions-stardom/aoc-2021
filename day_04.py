@@ -18,9 +18,15 @@ class Board:
     def call(self, num):
         self.board[self.board == num] = ma.masked
 
-def part_1(data):
+def _parse(rawdata):
+    data = rawdata.splitlines()
+    nums = [int(n) for n in data[0].split(",")]
+    boards = [Board(chunk[1:]) for chunk in mit.chunked(data[1:], 6)]
+    return nums, boards
+
+def part_1(nums, boards):
     r"""
-    >>> part_1('''\
+    >>> part_1(*_parse('''\
     ... 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
     ... 
     ... 22 13 17 11  0
@@ -39,24 +45,18 @@ def part_1(data):
     ... 10 16 15  9 19
     ... 18  8 23 26 20
     ... 22 11 13  6  5
-    ...  2  0 12  3  7''')
+    ...  2  0 12  3  7'''))
     4512
     """
-
-    data = data.splitlines()
-    nums = [int(n) for n in data[0].split(",")]
-
-    boards = [Board(chunk[1:]) for chunk in mit.chunked(data[1:], 6)]
-   
     for num in nums:
         for board in boards:
             board.call(num)
             if board.has_won:
                 return num * board.sum
 
-def part_2(data):
+def part_2(nums, boards):
     r"""
-    >>> part_2('''\
+    >>> part_2(*_parse('''\
     ... 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
     ... 
     ... 22 13 17 11  0
@@ -75,13 +75,9 @@ def part_2(data):
     ... 10 16 15  9 19
     ... 18  8 23 26 20
     ... 22 11 13  6  5
-    ...  2  0 12  3  7''')
+    ...  2  0 12  3  7'''))
     1924
     """
-    data = data.splitlines()
-    nums = [int(n) for n in data[0].split(",")]
-
-    boards = [Board(chunk[1:]) for chunk in mit.chunked(data[1:], 6)]
     for num in nums:
         for board in boards:
             board.call(num)
