@@ -7,10 +7,9 @@ def _parse(rawdata):
     w = max(it.chain.from_iterable((x1,x2) for x1,_,x2,_ in lines)) +1
     h = max(it.chain.from_iterable((y1,y2) for y1,_,y2,_ in lines)) +1
 
-    grid = np.zeros((w,h))
-    return lines,grid
+    return lines,(w,h)
 
-def part_1(lines, grid):
+def part_1(lines, gridsize):
     r"""
     >>> part_1(*_parse('''\
     ... 0,9 -> 5,9
@@ -26,6 +25,7 @@ def part_1(lines, grid):
     ... '''))
     5
     """
+    grid = np.zeros(gridsize)
     for x1,y1,x2,y2 in lines:
         if y1 == y2:
             # horizontal
@@ -37,7 +37,7 @@ def part_1(lines, grid):
    
     return np.count_nonzero(grid >= 2)
     
-def part_2(lines, grid):
+def part_2(lines, gridsize):
     r"""
     >>> part_2(*_parse('''\
     ... 0,9 -> 5,9
@@ -53,6 +53,7 @@ def part_2(lines, grid):
     ... '''))
     12
     """
+    grid = np.zeros(gridsize)
     for x1,y1,x2,y2 in lines:
         # Lets just be sensible about this now...
         xd, yd = np.sign(x2 - x1), np.sign(y2 - y1)  
