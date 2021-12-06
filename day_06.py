@@ -1,4 +1,3 @@
-import itertools as it
 from collections import Counter
 
 def _parse(rawdata):
@@ -16,6 +15,7 @@ def part_1(*nums):
 
     return len(nums)
 
+
 def part_2(*nums):
     r"""
     >>> part_2(*_parse('''\
@@ -25,11 +25,7 @@ def part_2(*nums):
     """
     state = Counter(nums)
     for _ in range(256):
-        nextstate = Counter()
-        nextstate = Counter({n-1: c for n,c in state.items() if n})
-        zeros = state[0]
-        nextstate[6] += zeros
-        nextstate[8] = zeros
-        state = nextstate
-    return sum(state.values())
+        state = sum((Counter({n-1:c} if n else {6:c,8:c}) for n,c in state.items()), Counter())
+
+    return state.total()
 
