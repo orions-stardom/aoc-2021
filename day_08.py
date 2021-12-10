@@ -6,7 +6,7 @@ def _parse(rawdata):
     parsed = []
     for line in rawdata.splitlines():
         comb, output = line.split("|")
-        parsed.append((set(c for c in comb.split()), output.split()))
+        parsed.append(([set(c) for c in comb.split()], output.split()))
     return parsed
 
 def part_1(*lines):
@@ -47,65 +47,37 @@ def part_2(*lines):
     ... egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
     ... gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce  
     ... '''))
-    5353 
+    61229
     """
-    normal_digits = [set("abcefg"), 
-                     set("cf"),
-                     set("acdeg"),
-                     set("acdfg"),
-                     set("bcdf"),
-                     set("abdfg"),
-                     set("abdefg"),
-                     set("acf"),
-                     set("abcdefg"),
-                     set("abcdfg"),
-                    ]
-    all_segments = normal_digits[8]
-    
     translated_outputs = []
+
     for seen_digits, output in lines:
-        possibilities = {segment : all_segments.copy() for segment in all_segments} 
-        known = {} 
-       
-        i = 0
-        while len(known) < 7:
-            i += 1
-            if not i % 10: breakpoint()
-            for seen_digit in seen_digits:
-                # Enumerate the possible digit mappings and remove any segments that aren't used by
-                # any digits this one can possibly map to
-                possible_digits = [candidate for candidate in normal_digits
-                         if len(seen_digit) == len(candidate)
-                         and all(candidate & possibilities[segment] for segment in seen_digit)]
+        digits =  [None] * 10
 
-                if not possible_digits: breakpoint()
+        digits[1] = mit.only(digit for digit in seen_digits if len(digit) == 2)
+        digits[3] = mit.only(digit for digit in seen_digits if len(digit) == 5 and digit > digits[1])
+        digits[4] = mit.only(digit for digit in seen_digits if len(digit) == 4)
+        digits[7] = mit.only(digit for digit in seen_digits if len(digit) == 3)
+        digits[8] = mit.only(digit for digit in seen_digits if len(digit) == 7)
 
-                possible_segments = set.union(*possible_digits)
-                for segment in seen_digit:
-                    possibilities[segment] &= possible_segments
-            
-            # if {a,b} must both map to {e,f} in some order
-            # then nothing else can map to {e,f}
-            # Only need to consider up to size 3 because they'll appear in complementary subsets
-            pairs = [(x,y) for x,y in it.combinations(possibilities,2) 
-                           if possibilities[x] == possibilities[y] 
-                           and len(possibilities[x]) == 2]
-            for x,y in pairs:
-                vals = possibilities[x]
-                for segment in possibilities.keys() - {x,y}:
-                    possibilities[segment] -= vals
-
-            unique_segments = (segment for segment in possibilities if len(possibilities[segment]) == 1)
-            for segment in unique_segments:
-                known[segment] = mit.only(possibilities[segment])
-
-                for other in possibilities.keys() - {segment}:
-                    possibilities[other].discard(known[segment])
-           
+        a = mit.only(digits[7] - digits[1])
+        b = mit.only(digits[4] - digits[3])
+        e = mit.only(digits[8] - digits[3] - {b})
+        g = mit.only(digits[3] - digits[4] - {a})
+        d = mit.only(digits[3] - digits[1] - {a, g})
         
-        digit_map = {frozenset(comb): {known[s] for s in comb} for comb in combs}
-        translated_digits = {frozenset(mit.only(comb for comb in combs if digitmap[comb] == normal[n])) :n for n in range(8)}
-        translated_outputs.append(int("".join(translated_digits[o] for o in output)))
+        digits[0] = digits[8] - {d}
+       
+        digits[9] = digits[4] | {a, g}
+        digits[6] = mit.only(digit for digit in seen_digits if len(digit) == 6 and digit not in (digits[0], digits[9]))
+        c = mit.only(digits[8] - digits[6])
+        f = mit.only(digits[1] - {c})
+        
+        digits[2] = {a,c,d,e,g}
+        digits[5] = {a,b,d,f,g}
 
-    return sum(translated_digits)
+        translation = {frozenset(digits[n]): str(n) for n in range(10)}
+        translated_outputs.append(int("".join(translation[frozenset(o)] for o in output)))
+
+    return sum(translated_outputs)
 
