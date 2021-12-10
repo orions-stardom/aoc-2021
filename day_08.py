@@ -64,27 +64,46 @@ def part_2(*lines):
     
     translated_outputs = []
     for seen_digits, output in lines:
-        possibilities = {segment : all_segments.copy() for segment in all_segments} # seen : real
-        
-        for i, seen_digit in enumerate(it.cycle(seen_digits)):
-            possible_digits = (candidate for candidate in normal_digits
-                     if len(seen_digit) == len(candidate)
-                     and all(candidate & possibilities[segment] for segment in seen_digit))
+        possibilities = {segment : all_segments.copy() for segment in all_segments} 
+        known = {} 
+       
+        i = 0
+        while len(known) < 7:
+            i += 1
+            if not i % 10: breakpoint()
+            for seen_digit in seen_digits:
+                # Enumerate the possible digit mappings and remove any segments that aren't used by
+                # any digits this one can possibly map to
+                possible_digits = [candidate for candidate in normal_digits
+                         if len(seen_digit) == len(candidate)
+                         and all(candidate & possibilities[segment] for segment in seen_digit)]
 
-            possible_segments = set.union(*possible_digits)
-            for segment in seen_digit:
-                possibilities[segment] &= possible_segments
+                if not possible_digits: breakpoint()
 
-            if all(len(m) == 1 for m in possibilities.values()):
-                break
-
-            if not all(possibilities.values()): breakpoint()
+                possible_segments = set.union(*possible_digits)
+                for segment in seen_digit:
+                    possibilities[segment] &= possible_segments
             
-            if i and not i % 20:
-                breakpoint()
+            # if {a,b} must both map to {e,f} in some order
+            # then nothing else can map to {e,f}
+            # Only need to consider up to size 3 because they'll appear in complementary subsets
+            pairs = [(x,y) for x,y in it.combinations(possibilities,2) 
+                           if possibilities[x] == possibilities[y] 
+                           and len(possibilities[x]) == 2]
+            for x,y in pairs:
+                vals = possibilities[x]
+                for segment in possibilities.keys() - {x,y}:
+                    possibilities[segment] -= vals
+
+            unique_segments = (segment for segment in possibilities if len(possibilities[segment]) == 1)
+            for segment in unique_segments:
+                known[segment] = mit.only(possibilities[segment])
+
+                for other in possibilities.keys() - {segment}:
+                    possibilities[other].discard(known[segment])
+           
         
-        segment_map = {seen:possible.pop() for seen, possible in possibilities.items()}
-        digit_map = {frozenset(comb): {segment_map[s] for s in comb} for comb in combs}
+        digit_map = {frozenset(comb): {known[s] for s in comb} for comb in combs}
         translated_digits = {frozenset(mit.only(comb for comb in combs if digitmap[comb] == normal[n])) :n for n in range(8)}
         translated_outputs.append(int("".join(translated_digits[o] for o in output)))
 
