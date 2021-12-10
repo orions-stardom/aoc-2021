@@ -1,5 +1,6 @@
 import itertools as it
 import more_itertools as mit
+from collections import Counter
 
 def _parse(rawdata):
     parsed = []
@@ -25,12 +26,15 @@ def part_1(*lines):
     26
     """
     outputs = (line[1] for line in lines)
-    #breakpoint()
     return sum(len(n) in (2,3,4,7) for output in outputs for n in output)
 
 
 def part_2(*lines):
     r"""
+    >>> part_2(*_parse('''\
+    ... acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
+    ... '''))
+    5353
     >>> part_2(*_parse('''\
     ... be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
     ... edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
@@ -45,27 +49,41 @@ def part_2(*lines):
     ... '''))
     5353 
     """
-    normal = [set("abcefg"), set("cf"), set("acdeg"), set("acdfg"), set("bcdf"), set("abdfg"), set("abdefg"), set("acf"), set("abcdefg"), set("abcdfg")]
-    universalset = normal[8]
+    normal_digits = [set("abcefg"), 
+                     set("cf"),
+                     set("acdeg"),
+                     set("acdfg"),
+                     set("bcdf"),
+                     set("abdfg"),
+                     set("abdefg"),
+                     set("acf"),
+                     set("abcdefg"),
+                     set("abcdfg"),
+                    ]
+    all_segments = normal_digits[8]
     
     translated_outputs = []
-    for combs, output in lines:
-        possibilities = {segment : universalset.copy() for segment in universalset }
+    for seen_digits, output in lines:
+        possibilities = {segment : all_segments.copy() for segment in all_segments} # seen : real
+        
+        for i, seen_digit in enumerate(it.cycle(seen_digits)):
+            possible_digits = (candidate for candidate in normal_digits
+                     if len(seen_digit) == len(candidate)
+                     and all(candidate & possibilities[segment] for segment in seen_digit))
 
-        for consider in it.cycle(combs):
-            cands = {frozenset(cand) for cand in normal if len(consider) == len(cand)}
-            cand_segments = set(it.chain.from_iterable(cands))
-             
-            for eliminate in it.product((universalset - cands), consider):
-                possibilities[eliminate[0]].discard(eliminate[1])
+            possible_segments = set.union(*possible_digits)
+            for segment in seen_digit:
+                possibilities[segment] &= possible_segments
 
             if all(len(m) == 1 for m in possibilities.values()):
                 break
+
+            if not all(possibilities.values()): breakpoint()
+            
+            if i and not i % 20:
+                breakpoint()
         
-        # possibilities are what normal segment can map to which mixed up segement
-        # but now we need it the other way around
-        segment_map = {l2.pop():l1 for l1,l2 in possibilities.items()}
-        breakpoint()
+        segment_map = {seen:possible.pop() for seen, possible in possibilities.items()}
         digit_map = {frozenset(comb): {segment_map[s] for s in comb} for comb in combs}
         translated_digits = {frozenset(mit.only(comb for comb in combs if digitmap[comb] == normal[n])) :n for n in range(8)}
         translated_outputs.append(int("".join(translated_digits[o] for o in output)))
