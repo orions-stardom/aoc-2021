@@ -72,26 +72,20 @@ def part_2(start, rules):
     ... '''))
     2188189693529
     """
-    state = Counter(f"{l}{r}" for l,r in mit.pairwise(start)) 
+    pairfreq = Counter(f"{l}{r}" for l,r in mit.pairwise(start)) 
+    polyfreq = Counter(start) 
     for _ in range(40):
         newstate = Counter()
-        for pair, count in state.items():
+        for pair, count in pairfreq.items():
             if pair in rules:
                 l,r = pair
                 c = rules[pair]
                 newstate.update({f"{l}{c}": count, f"{c}{r}":count})
+                polyfreq.update({c: count})
             else:
                 newstate[pair] = count
 
-        state = newstate
+        pairfreq = newstate
 
-    # Convert back from counting pairs to counting individual elements
-    # because the pairs overlap, we only want to count the lhs of each
-    # but then we haven't counted the tail element.. but it won't ever 
-    # have changed
-    count = Counter(start[-1])
-    for (l,r), n in state.items():
-        count.update({l:n})
-
-    count = count.most_common()
+    count = polyfreq.most_common()
     return count[0][1] - count[-1][1]
