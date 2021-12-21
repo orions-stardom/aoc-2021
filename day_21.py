@@ -27,13 +27,15 @@ def part_1(*players):
 
     """
     dice = it.cycle(range(1,101))
-    players = list(players) 
-    for i, (roll, playernum) in enumerate(zip(mit.chunked(dice, 3), it.cycle(range(len(players)))), start=1):
-        # this started out with player being mutable and grew into a monster
-        players[playernum] = players[playernum].move(sum(roll))
-        if players[playernum].score >= 1000:
+    players = list(players)
+    for round, roll in enumerate(mit.chunked(dice, 3)):
+        player = round % len(players)
+        players[player] = players[player].move(sum(roll))
+        if players[player].score >= 1000:
             break
-    return min(p.score for p in players)*i*3
+
+    rolls = (round+1)*3
+    return min(p.score for p in players)*rolls
 
 def part_2(*players):
     r"""
